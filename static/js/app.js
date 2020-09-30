@@ -1,68 +1,55 @@
-// inspecting connection: for all connection printing ont he console
+// inspecting connection with HTML file
 console.log('This is app.js connected');
 
+// function to draw a bar graph
 function DrawBargraph(sampleId) {
     console.log(`DrawBargraph (${sampleId}`)
 }
 
-function optionChanged(newSampleId) {
-    console.log(`User select ${newSampleId}`)
+function DrawBubbleChart(sampleId) {
+    console.log(`DrawBubbleChart (${sampleId}`)
 }
 
+
+
+function optionChanged(newSampleId) {
+    console.log(`User select ${newSampleId}`)
+
+    DrawBargraph(newSampleId)
+}
+
+// init function
 function initDashboard() {
     // checking function connection
     console.log('calling initDashboard()');
 
+    // getting the dropdownbox element
     var selector = d3.select('#selDataset');
 
+    // reading samples.json 
     d3.json("/samples.json").then((data) => {
+        // checking succesfull reading
         console.log(data)
+        //variable holding the subjects ID
         var sampleNames = data.names;
-        // since we don't have option we need to append it in our code
-        // populate the selector with all of the sample IDs
+        // appending each subject ID to the dropdown, se its not hard-coded
+        // and populating the selector with all of the samples ID
         sampleNames.forEach((sampleId) => {
             selector.append('option')
                 .text(sampleId)
                 .property('value', sampleId);
-            
         });
-        
+        // getting the displayed sample ID
         var sampleId = sampleNames[0];
-        console.log('Starting sample: ', sampleNames);
+        // validating on the console
+        console.log('Starting sample: ', sampleId);
 
         // draw the graphs
         DrawBargraph(sampleId);
-        // DrawBubbleChart(sampleId);
+        DrawBubbleChart(sampleId);
 
     });
 }
 
 initDashboard();
-
-
-// // using D3 fetch to read data the from JSON file, referred as data
-// d3.json("/samples.json").then((data) => {
-    
-//     // variable with the individuals ID
-//     var subjectID = data.names;
-    
-//     console.log(subjectID);
-    
-//     function optionChanged(subjectID) {
-
-//         // selecting the dropdown menu 'd3.select("#selDataset")' and assigning 
-//         // the value to the dropdown '.node().value
-//         var dataset = subjectID.value
-//         document.getElementById("selDataset").innerHTML = subjectID;
-
-//         //var dataset = d3.select("#selDataset").node().value;
-//         // Assign the value of the dropdown menu option to a variable
-//         // var dataset = dropdownMenu.node().value;
-//         console.log(dataset)
-        
-//     };
-
-//     function updatePlot()
-// });
-
 
