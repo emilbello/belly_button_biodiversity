@@ -8,36 +8,72 @@ function drawBarChart(sampleId) {
     // reading samples.json 
     d3.json('/samples.json').then((data) => {
         // checking succesfull reading
-        console.log(data.samples)
-        // getting the sample_values, otu_id, and otu_lables
-        var sampleData = data.samples
-        console.log(sampleData[`${sampleID}`])
-        //variable holding the subjects ID
-        // var trace1 = {
-        //     x: 
-        // };
+        // console.log(data.samples)
+        // getting the object: sample_values, otu_id, and otu_lables by sampleID
+        var sampleData = data.samples.filter(x => x.id == sampleId)
+        console.log(sampleData[0].otu_ids.slice(0, 10).reverse())
         
-        // var barLayout = {
-        //     height: 400,
-        //     width: 500
-        // }
+        
+        var trace1 = {
+            type: 'bar',
+            x: sampleData[0].sample_values.slice(0, 10).reverse(),
+            y: `OTU ${sampleData[0].otu_ids.slice(0, 10).reverse()}`,
+            text: sampleData[0].otu_labels.slice(0, 10),
+            orientation: "h"
+        };
+        
+        var data = [trace1];
+        
+        var layout = {
+            height: 600,
+            width: 300
+        }
 
-        // Plotly,newPLot('bar', barData, barLayout)
+        Plotly.newPlot('bar', data, layout)
                 
     });
 
 }
 
 function drawBubbleChart(sampleId) {
-    console.log(`DrawBubbleChart (${sampleId}`)
+    // fetch data
+    d3.json('/samples.json').then((data) => {
+        
+        // getting the object: sample_values, otu_id, and otu_lables by sampleID
+        var sampleData = data.samples
+        
+        var sampleData = data.samples.filter(x => x.id == sampleId)
+        console.log(sampleData[0].otu_ids)
 
+               
+        var trace1 = {
+            x: sampleData[0].otu_ids,
+            y: sampleData[0].sample_values,
+            mode: 'markers',
+            marker: {
+                size: sampleData[0].sample_values
+                // color: 
+            }
+        };
+
+        data = [trace1];
+
+        var layout = {
+            showlegend: false,
+            height: 600,
+            width: 900
+        };
+
+        Plotly.newPlot('bubble', data, layout);
+    });
 }
 
 // function demographics(sampleId) {
 //     d3.json('/samples.json').then((data) => {
 //         console.log(data.samples);
-//         data.samples.forEach((id) => {
-//             Object.entries((value) => {
+//         data.samples.forEach((key, value) => {
+//             selector.append('h6')
+//              .text(`${key}: ${value}`)
 
 //             }
 //         });
