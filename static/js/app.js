@@ -43,7 +43,7 @@ function drawBubbleChart(sampleId) {
         var sampleData = data.samples;
         
         var sampleData = data.samples.filter(x => x.id == sampleId);
-        console.log(sampleData[0].otu_ids);
+        //console.log(sampleData[0].otu_ids);
 
                
         var trace1 = {
@@ -68,7 +68,6 @@ function drawBubbleChart(sampleId) {
         Plotly.newPlot('bubble', data, layout);
     });
 }
-
 function demographics(sampleId) {
     console.log(`Show metadata ${sampleId}`);
     d3.json('/samples.json').then((data) => {
@@ -80,6 +79,7 @@ function demographics(sampleId) {
         var selector = d3.select("#sample-metadata")
         // clear previous content
         selector.html('');
+
         Object.entries(metaData[0]).forEach(([key, value]) => {
             selector.append('h6')
              .text(`${key}: ${value}`);
@@ -89,9 +89,10 @@ function demographics(sampleId) {
 
 function optionChanged(newSampleId) {
     console.log(`User select ${newSampleId}`)
-
+    // running functions when selecting a new sampleID
     drawBarChart(newSampleId)
     drawBubbleChart(newSampleId)
+    demographics(newSampleId)
 }
 
 // init function discussed in office hours
@@ -123,7 +124,7 @@ function initDashboard() {
         // draw the graphs
         drawBarChart(sampleId);
         drawBubbleChart(sampleId);
-        
+        demographics(sampleId)
     });
 }
 
