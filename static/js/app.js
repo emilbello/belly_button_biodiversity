@@ -17,7 +17,7 @@ function drawBarChart(sampleId) {
         var trace1 = {
             type: 'bar',
             x: sampleData[0].sample_values.slice(0, 10).reverse(),
-            y: sampleData[0].otu_ids.slice(0, 10).map(otu =>  `OTU ${otu}`).reverse(),
+            y: sampleData[0].otu_ids.slice(0, 10).map(otu =>  `OTU ${otu}`).reverse(), // adding OTU to the label.
             text: sampleData[0].otu_labels.slice(0, 10),
             orientation: "h"
         };
@@ -44,15 +44,15 @@ function drawBubbleChart(sampleId) {
         
         var sampleData = data.samples.filter(x => x.id == sampleId);
         //console.log(sampleData[0].otu_ids);
-
                
         var trace1 = {
             x: sampleData[0].otu_ids,
             y: sampleData[0].sample_values,
             mode: 'markers',
             marker: {
-                size: sampleData[0].sample_values
-                
+                size: sampleData[0].sample_values,
+                color: sampleData[0].otu_ids,
+                colorscale: 'Earth'
             },
             text: sampleData[0].otu_labels
         };
@@ -60,6 +60,7 @@ function drawBubbleChart(sampleId) {
         data = [trace1];
 
         var layout = {
+            title: "Bacteria",
             showlegend: false,
             height: 600,
             width: 1200
@@ -72,7 +73,6 @@ function demographics(sampleId) {
     console.log(`Show metadata ${sampleId}`);
     d3.json('/samples.json').then((data) => {
         console.log(data.metadata);
-        console.log('print thissss')
         var metaData = data.metadata.filter(x => x.id == sampleId);
         console.log(metaData[0]);
         // getting the div element
@@ -85,7 +85,41 @@ function demographics(sampleId) {
              .text(`${key}: ${value}`);
         });
     });
-}  
+}
+
+function gaugeChart(sampleId) {
+    console.log(`works ${sampleId}`);
+    
+    
+    // var data = [
+    //     {
+    //       domain: { 
+    //           x: [0, 1], 
+    //           y: [0, 1]
+    //         },
+    //       value: 450,
+    //       title: { text: "Speed" },
+    //       type: "indicator",
+    //       mode: "gauge+number+delta",
+    //       delta: { reference: 380 },
+    //       gauge: {
+    //         axis: { range: [0, 9] },
+    //         steps: [
+    //           { range: [0, 250], color: "lightgray" },
+    //           { range: [250, 400], color: "gray" }
+    //         ],
+    //         threshold: {
+    //           line: { color: "red", width: 4 },
+    //           thickness: 0.75,
+    //           value: 490
+    //         }
+    //       }
+    //     }
+    //   ];
+      
+    //   var layout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+    //   Plotly.newPlot('myDiv', data, layout);
+}
 
 function optionChanged(newSampleId) {
     console.log(`User select ${newSampleId}`)
@@ -93,6 +127,7 @@ function optionChanged(newSampleId) {
     drawBarChart(newSampleId)
     drawBubbleChart(newSampleId)
     demographics(newSampleId)
+    gaugeChart(newSampleId);
 }
 
 // init function discussed in office hours
@@ -124,7 +159,8 @@ function initDashboard() {
         // draw the graphs
         drawBarChart(sampleId);
         drawBubbleChart(sampleId);
-        demographics(sampleId)
+        demographics(sampleId);
+        gaugeChart(sampleId);
     });
 }
 
