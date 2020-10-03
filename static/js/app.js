@@ -10,14 +10,14 @@ function drawBarChart(sampleId) {
         // checking succesfull reading
         // console.log(data.samples)
         // getting the object: sample_values, otu_id, and otu_lables by sampleID
-        var sampleData = data.samples.filter(x => x.id == sampleId)
+        var sampleData = data.samples.filter(x => x.id == sampleId) // filter pulls out what matches the criteria
         console.log(sampleData[0].otu_ids.slice(0, 10).reverse())
         
-        
+
         var trace1 = {
             type: 'bar',
             x: sampleData[0].sample_values.slice(0, 10).reverse(),
-            y: `OTU ${sampleData[0].otu_ids.slice(0, 10).reverse()}`,
+            y: sampleData[0].otu_ids.slice(0, 10).map(otu =>  `OTU ${otu}`).reverse(),
             text: sampleData[0].otu_labels.slice(0, 10),
             orientation: "h"
         };
@@ -25,8 +25,8 @@ function drawBarChart(sampleId) {
         var data = [trace1];
         
         var layout = {
-            height: 600,
-            width: 300
+            title: `Subject ID ${sampleId} Top 10 Bacteria Found`,
+            margin: {t: 30, l: 150}
         }
 
         Plotly.newPlot('bar', data, layout)
@@ -40,10 +40,10 @@ function drawBubbleChart(sampleId) {
     d3.json('/samples.json').then((data) => {
         
         // getting the object: sample_values, otu_id, and otu_lables by sampleID
-        var sampleData = data.samples
+        var sampleData = data.samples;
         
-        var sampleData = data.samples.filter(x => x.id == sampleId)
-        console.log(sampleData[0].otu_ids)
+        var sampleData = data.samples.filter(x => x.id == sampleId);
+        console.log(sampleData[0].otu_ids);
 
                
         var trace1 = {
@@ -52,8 +52,9 @@ function drawBubbleChart(sampleId) {
             mode: 'markers',
             marker: {
                 size: sampleData[0].sample_values
-                // color: 
-            }
+                
+            },
+            text: sampleData[0].otu_labels
         };
 
         data = [trace1];
@@ -61,24 +62,30 @@ function drawBubbleChart(sampleId) {
         var layout = {
             showlegend: false,
             height: 600,
-            width: 900
+            width: 1200
         };
 
         Plotly.newPlot('bubble', data, layout);
     });
 }
 
-// function demographics(sampleId) {
-//     d3.json('/samples.json').then((data) => {
-//         console.log(data.samples);
-//         data.samples.forEach((key, value) => {
-//             selector.append('h6')
-//              .text(`${key}: ${value}`)
-
-//             }
-//         });
-//     });
-// }  
+function demographics(sampleId) {
+    console.log(`Show metadata ${sampleId}`);
+    d3.json('/samples.json').then((data) => {
+        console.log(data.metadata);
+        console.log('print thissss')
+        var metaData = data.metadata.filter(x => x.id == sampleId);
+        console.log(metaData[0]);
+        // getting the div element
+        var selector = d3.select("#sample-metadata")
+        // clear previous content
+        selector.html('');
+        Object.entries(metaData[0]).forEach(([key, value]) => {
+            selector.append('h6')
+             .text(`${key}: ${value}`);
+        });
+    });
+}  
 
 function optionChanged(newSampleId) {
     console.log(`User select ${newSampleId}`)
@@ -87,7 +94,7 @@ function optionChanged(newSampleId) {
     drawBubbleChart(newSampleId)
 }
 
-// init function
+// init function discussed in office hours
 function initDashboard() {
     // checking function connection
     console.log('calling initDashboard()');
