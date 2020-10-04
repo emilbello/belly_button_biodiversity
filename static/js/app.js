@@ -6,7 +6,7 @@ function drawBarChart(sampleId) {
     console.log(`DrawBargraph (${sampleId}`)
     
     // reading samples.json 
-    d3.json('/samples.json').then((data) => {
+    d3.json('samples.json').then((data) => {
         // checking succesfull reading
         // console.log(data.samples)
         // getting the object: sample_values, otu_id, and otu_lables by sampleID
@@ -40,7 +40,7 @@ function drawBarChart(sampleId) {
 
 function drawBubbleChart(sampleId) {
     // fetch data
-    d3.json('/samples.json').then((data) => {
+    d3.json('samples.json').then((data) => {
         
         // getting the object: sample_values, otu_id, and otu_lables by sampleID
         var sampleData = data.samples;
@@ -74,7 +74,7 @@ function drawBubbleChart(sampleId) {
 }
 function demographics(sampleId) {
     console.log(`Show metadata ${sampleId}`);
-    d3.json('/samples.json').then((data) => {
+    d3.json('samples.json').then((data) => {
         console.log(data.metadata);
         var metaData = data.metadata.filter(x => x.id == sampleId);
         console.log(metaData[0]);
@@ -92,7 +92,7 @@ function demographics(sampleId) {
 
 function gaugeChart(sampleId) {
     console.log(`works ${sampleId}`);
-    d3.json('/samples.json').then((data) => {
+    d3.json('samples.json').then((data) => {
         console.log(data.metadata);
         var metaData = data.metadata.filter(x => x.id == sampleId);
         //checking washing frequency result
@@ -144,7 +144,7 @@ function initDashboard() {
     var selector = d3.select('#selDataset');
 
     // reading samples.json 
-    d3.json('/samples.json').then((data) => {
+    d3.json('samples.json').then((data) => {
         // checking succesfull reading
         console.log(data)
         //variable holding the subjects ID
